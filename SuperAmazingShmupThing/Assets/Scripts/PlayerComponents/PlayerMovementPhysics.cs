@@ -7,7 +7,15 @@ namespace ShmupProject
         Rigidbody _playerShip;
         PlayerData _playerData;
 
+        public PlayerMovementPhysics() { }
+
         public PlayerMovementPhysics(Transform playerShip, PlayerData playerData)
+        {
+            _playerData = playerData;
+            _playerShip = playerShip.GetComponent<Rigidbody>();
+        }
+
+        public void SetDependencies(Transform playerShip, PlayerData playerData)
         {
             _playerData = playerData;
             _playerShip = playerShip.GetComponent<Rigidbody>();

@@ -2,20 +2,16 @@ using UnityEngine;
 
 namespace ShmupProject
 {
-    public class SingleShotPlayer : IWeaponPlayer
+    public sealed class SingleShotPlayer : IWeaponPlayer
     {
-        private GameObject _playerBulletPrefab;
         private float _bulletSpeed = 50f;
-
-        public SingleShotPlayer()
-        {
-            _playerBulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet_Player");
-        }
 
         public void Shoot(Transform bulletSpawn)
         {
-            var bullet = GameObject.Instantiate(_playerBulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
-            bullet.AddComponent<Rigidbody>().useGravity = false;
+            var bullet = ObjectPoolManager.GetInstance().PlayerBulletsPool.Pop();
+            bullet.transform.position = bulletSpawn.position;
+            bullet.transform.rotation = bulletSpawn.rotation;
+            bullet.GetComponent<Rigidbody>().velocity = Vector3.zero;
             bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * _bulletSpeed, ForceMode.VelocityChange);
         }
     }

@@ -16,3 +16,4 @@ MonoBehaviour:
   _position: {x: 0, y: 1, z: -6.5}
   _boundX: 4.5
   _boundZ: 7.5
+  _prefab: {fileID: 710141861683669654, guid: f1311584bfb750843a50d5143ddd84cd, type: 3}

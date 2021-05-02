@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ShmupProject
 {
-    public class PlayerHealth : MonoBehaviour
+    public sealed class PlayerHealth
     {
         private float _hp = 100;
 

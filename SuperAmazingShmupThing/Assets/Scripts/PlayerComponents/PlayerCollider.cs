@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace ShmupProject
 {
-    public class PlayerCollider : MonoBehaviour
+    public sealed class PlayerCollider : MonoBehaviour
     {
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("EnemyBullet"))
+            if (other.CompareTag(MagicStrings.Enemy_Bullet_Tag))
             {
-                Destroy(other.gameObject);
+                ObjectPoolManager.GetInstance().EnemyBulletsPool.Push(other.gameObject);
                 GetHit?.Invoke();
             }
-            if (other.CompareTag("Enemy"))
+            if (other.CompareTag(MagicStrings.Enemy))
             {
                 GetHit?.Invoke();
             }

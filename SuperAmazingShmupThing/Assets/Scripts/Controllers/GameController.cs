@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ShmupProject
 {
-    public class GameController : MonoBehaviour
+    public sealed class GameController : MonoBehaviour
     {
         private List<IUpdateable> _updatables;
         private PlayerController _playerController;
@@ -12,9 +12,10 @@ namespace ShmupProject
         private void Awake()
         {
             _updatables = new List<IUpdateable>();
-            _playerController = new PlayerController();
+            _playerController = new PlayerController(new PlayerFactoryNonPhysical());
             _updatables.Add(_playerController);
-            _enemyController = new EnemyController(_playerController.Player);
+            _enemyController = new EnemyController(_playerController.Player, 
+                                                    new EnemyPool(new EnemyFactory(new SingleShotStraightEnemy())));
             _updatables.Add(_enemyController);
         }
 

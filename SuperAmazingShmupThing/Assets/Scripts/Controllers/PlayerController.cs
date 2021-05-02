@@ -2,14 +2,11 @@ using UnityEngine;
 
 namespace ShmupProject
 {
-    public class PlayerController : IUpdateable
+    public sealed class PlayerController : IUpdateable
     {
-        private PlayerData _playerData;
-        private GameObject _player;
-        private Transform _transform;
-        private IMovementPLayer _movement;
-        private IWeaponPlayer _weapon;
-        private PlayerHealth _playerHealth;
+        private Player _player;
+
+        private PlayerFactoryNonPhysical _playerFactory;
 
         private float inputHor;
         private float inputVer;
@@ -17,40 +14,32 @@ namespace ShmupProject
         private float _shootingCDtime = 0.5f;
         private float _shootingCD;
 
-        public PlayerController()
+        public PlayerController(PlayerFactoryNonPhysical playerFactory)
         {
-            _playerData = Resources.Load<PlayerData>("Data/PlayerData");
-            _player = GameObject.Find("Player");
-            _transform = _player.transform;
-            _transform.position = _playerData.Position;
-            _playerHealth = new PlayerHealth();
+            _playerFactory = playerFactory;
+            _player = _playerFactory.CreatePlayer();
 
-            _player.GetComponentInChildren<PlayerCollider>().GetHit += _playerHealth.TakeHit;
-
-            _movement = new PlayerMovementNonPhys(_transform, _playerData);
-            //_movement = new PlayerMovementPhysics(_transform, _playerData);
-
-            _weapon = new SingleShotPlayer();
+            _player.Collider.GetHit += _player.Health.TakeHit;
 
             _shootingCD = _shootingCDtime;
         }
 
         public void UpdateRegular(float deltaTime)
         {
-            inputHor = Input.GetAxis("Horizontal");
-            inputVer = Input.GetAxis("Vertical");
-            _movement.Move(inputHor, inputVer, deltaTime);
+            inputHor = Input.GetAxis(MagicStrings.Input_Axis_Horizontal);
+            inputVer = Input.GetAxis(MagicStrings.Input_Axis_Vertical);
+            _player.Movement.Move(inputHor, inputVer, deltaTime);
 
             if (_shootingCD > 0)
                 _shootingCD -= deltaTime;
 
-            if (Input.GetAxis("Fire1") != 0 && _shootingCD <= 0)
+            if (Input.GetAxis(MagicStrings.Input_Axis_Fire) != 0 && _shootingCD <= 0)
             {
-                _weapon.Shoot(_transform);
+                _player.Weapon.Shoot(_player.Transform);
                 _shootingCD = _shootingCDtime;
             }
         }
 
-        public Transform Player => _player.transform;
+        public Transform Player => _player.Transform;
     }
 }
