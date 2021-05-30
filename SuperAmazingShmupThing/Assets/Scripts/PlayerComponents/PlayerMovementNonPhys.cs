@@ -7,7 +7,15 @@ namespace ShmupProject
         Transform _playerShip;
         PlayerData _playerData;
 
+        public PlayerMovementNonPhys() { }
+
         public PlayerMovementNonPhys(Transform playerShip, PlayerData playerData)
+        {
+            _playerData = playerData;
+            _playerShip = playerShip;
+        }
+
+        public void SetDependencies(Transform playerShip, PlayerData playerData)
         {
             _playerData = playerData;
             _playerShip = playerShip;

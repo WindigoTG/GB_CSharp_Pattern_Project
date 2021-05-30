@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ShmupProject
 {
-    public class EnemyMovementLinear : IMovementEnemy
+    public sealed class EnemyMovementLinear : IMovementEnemy
     {
         private float _coefficientA;
         private float _coefficientB;

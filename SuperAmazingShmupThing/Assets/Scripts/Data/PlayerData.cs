@@ -9,9 +9,11 @@ namespace ShmupProject
         [SerializeField] private Vector3 _position;
         [SerializeField] private float _boundX;
         [SerializeField] private float _boundZ;
+        [SerializeField] private GameObject _prefab;
         public float Speed => _speed;
         public Vector3 Position => _position;
         public float Xbound => _boundX;
         public float Zbound => _boundZ;
+        public GameObject Prefab => _prefab;
     }
 }
