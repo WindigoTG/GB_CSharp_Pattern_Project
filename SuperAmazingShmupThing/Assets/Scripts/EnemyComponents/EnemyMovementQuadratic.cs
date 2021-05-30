@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ShmupProject
 {
-    public class EnemyMovementQuadratic : IMovementEnemy
+    public sealed class EnemyMovementQuadratic : IMovementEnemy
     {
         private float _coefficientA;
         private float _tgtX;
