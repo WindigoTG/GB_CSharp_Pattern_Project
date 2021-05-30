@@ -6,12 +6,12 @@ namespace ShmupProject
     {
         private PlayerData _playerData;
         private Transform _transform;
-        private IMovementPLayer _movement;
+        private IMovementPlayer _movement;
         private IWeaponPlayer _weapon;
         private PlayerHealth _playerHealth;
         private PlayerCollider _collider;
 
-        public Player(PlayerData playerData, IMovementPLayer movement, IWeaponPlayer weapon)
+        public Player(PlayerData playerData, IMovementPlayer movement, IWeaponPlayer weapon)
         {
             _playerData = playerData;
             _movement =  movement;
@@ -22,15 +22,16 @@ namespace ShmupProject
             _collider = _transform.GetComponentInChildren<PlayerCollider>();
 
             _movement.SetDependencies(_transform, _playerData);
+            _collider.GetHit += _playerHealth.TakeHit;
         }
 
         public Transform Transform => _transform;
         public IWeaponPlayer Weapon => _weapon;
-        public IMovementPLayer Movement => _movement;
+        public IMovementPlayer Movement => _movement;
         public PlayerHealth Health => _playerHealth;
         public PlayerCollider Collider => _collider;
 
-        public void SetMovement(IMovementPLayer movement)
+        public void SetMovement(IMovementPlayer movement)
         {
             _movement = movement;
         }
