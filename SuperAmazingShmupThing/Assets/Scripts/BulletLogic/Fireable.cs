@@ -14,6 +14,10 @@ namespace ShmupProject
                 _subFireable.Fire(config, position, rotation, bulletManager);
         }
 
-        public IFireable SubFireable { set { _subFireable = value; } }
+        public IFireable SubFireable 
+        { 
+            set { _subFireable = value; }
+            get { return _subFireable; }
+        }
     }
 }
