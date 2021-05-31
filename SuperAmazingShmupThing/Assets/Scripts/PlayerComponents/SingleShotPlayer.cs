@@ -8,7 +8,7 @@ namespace ShmupProject
 
         public void Shoot(Transform bulletSpawn)
         {
-            var bullet = ObjectPoolManager.GetInstance().PlayerBulletsPool.Pop();
+            var bullet = ServiceLocator.GetService<BulletPoolManager>().PlayerBulletsPool.Pop();
             bullet.transform.position = bulletSpawn.position;
             bullet.transform.rotation = bulletSpawn.rotation;
             bullet.GetComponent<Rigidbody>().velocity = Vector3.zero;

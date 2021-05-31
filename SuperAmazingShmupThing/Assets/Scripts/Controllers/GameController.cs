@@ -11,6 +11,7 @@ namespace ShmupProject
 
         private void Awake()
         {
+            ServiceLocator.AddService<BulletPoolManager>(new BulletPoolManager());
             _updatables = new List<IUpdateable>();
             _playerController = new PlayerController(new PlayerFactoryNonPhysical());
             _updatables.Add(_playerController);

@@ -2,28 +2,20 @@ using UnityEngine;
 
 namespace ShmupProject
 {
-    internal sealed class ObjectPoolManager
+    internal sealed class BulletPoolManager
     {
-        private static ObjectPoolManager _poolManager;
+        private static BulletPoolManager _poolManager;
 
         private ObjectPool _playerBulletsPool;
         private ObjectPool _enemyBulletsPool;
-        private ObjectPool _enemiesPool;
 
         private Transform _playerBulletParent;
         private Transform _enemyBulletParent;
 
-        private ObjectPoolManager()
+        public BulletPoolManager()
         {
             _playerBulletParent = new GameObject(MagicStrings.Player_Bullets_Parent_Object).transform;
             _enemyBulletParent = new GameObject(MagicStrings.Enemy_Bullets_Parent_Object).transform;
-        }
-
-        public static ObjectPoolManager GetInstance()
-        {
-            if (_poolManager == null)
-                _poolManager = new ObjectPoolManager();
-            return _poolManager;
         }
 
         public ObjectPool PlayerBulletsPool

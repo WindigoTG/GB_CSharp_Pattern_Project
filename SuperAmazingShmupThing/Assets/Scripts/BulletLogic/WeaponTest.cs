@@ -16,9 +16,11 @@ namespace ShmupProject
         {
             _bulletManager = new BulletManager();
 
-            Arc arc = new Arc();
-            Line line = new Line();
-            SingleBullet bullet = new SingleBullet();
+            ServiceLocator.AddService<BulletPoolManager>(new BulletPoolManager());
+
+            //Arc arc = new Arc();
+            //Line line = new Line();
+            //SingleBullet bullet = new SingleBullet();
             //_projectile = arc.Of(line).Of(bullet);
             _projectile = new SingleBullet().FiredInLine().FiredInArc();
 

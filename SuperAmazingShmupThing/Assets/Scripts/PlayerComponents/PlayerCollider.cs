@@ -9,7 +9,7 @@ namespace ShmupProject
         {
             if (other.CompareTag(MagicStrings.Enemy_Bullet_Tag))
             {
-                ObjectPoolManager.GetInstance().EnemyBulletsPool.Push(other.gameObject);
+                ServiceLocator.GetService<BulletPoolManager>().EnemyBulletsPool.Push(other.gameObject);
                 GetHit?.Invoke();
             }
             if (other.CompareTag(MagicStrings.Enemy))

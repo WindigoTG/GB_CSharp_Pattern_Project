@@ -26,7 +26,7 @@ namespace ShmupProject
                 _lifeTime -= deltaTime;
                 if (_lifeTime <= 0)
                 {
-                    ObjectPoolManager.GetInstance().EnemyBulletsPool.Push(_bullet.gameObject);
+                    ServiceLocator.GetService<BulletPoolManager>().EnemyBulletsPool.Push(_bullet.gameObject);
                     _bulletManager.RemoveCommand(this);
                 }
 

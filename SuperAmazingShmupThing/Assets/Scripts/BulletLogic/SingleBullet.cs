@@ -6,7 +6,7 @@ namespace ShmupProject
     {
         public override void Fire(BullletConfig config, Vector3 position, Vector3 rotation, BulletManager bulletManager)
         {
-            Transform bullet = ObjectPoolManager.GetInstance().EnemyBulletsPool.Pop().transform;
+            Transform bullet = ServiceLocator.GetService<BulletPoolManager>().EnemyBulletsPool.Pop().transform;
             bullet.position = position;
             bullet.rotation = Quaternion.Euler(rotation);
             BulletMoveCommand command = new BulletMoveCommand(bullet, config.BulletSpeed, config.BulletAngularSpeed, config.LifeTime, bulletManager);
