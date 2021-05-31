@@ -21,5 +21,15 @@ namespace ShmupProject
 
             return lowest;
         }
+
+        public static Fireable FiredInLine(this Fireable fireable)
+        {
+            return new Line().Of(fireable);
+        }
+
+        public static Fireable FiredInArc(this Fireable fireable)
+        {
+            return new Arc().Of(fireable);
+        }
     }
 }

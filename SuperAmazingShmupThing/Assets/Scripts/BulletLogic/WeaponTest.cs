@@ -19,7 +19,8 @@ namespace ShmupProject
             Arc arc = new Arc();
             Line line = new Line();
             SingleBullet bullet = new SingleBullet();
-            _projectile = arc.Of(line).Of(bullet);
+            //_projectile = arc.Of(line).Of(bullet);
+            _projectile = new SingleBullet().FiredInLine().FiredInArc();
 
             _fireDelay = _config.FireDelay;
         }
