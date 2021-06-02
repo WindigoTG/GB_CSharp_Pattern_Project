@@ -4,6 +4,6 @@ namespace ShmupProject
 {
     public interface IFireable
     {
-        public void Fire(BullletConfig config, Vector3 position, Vector3 rotation, BulletManager bulletManager);
+        public void Fire(BullletConfig config, Vector3 position, Vector3 rotation);
     }
 }

@@ -6,14 +6,14 @@ namespace ShmupProject
 {
     public class Arc : Fireable
     {
-        public override void Fire(BullletConfig config, Vector3 position, Vector3 rotation, BulletManager bulletManager)
+        public override void Fire(BullletConfig config, Vector3 position, Vector3 rotation)
         {
             config.Position = position;
             config.Rotation = rotation;
 
             if (config.LineCount == 1)
             {
-                SubFire(config, position, rotation, bulletManager);
+                SubFire(config, position, rotation);
                 return;
             }
 
@@ -26,7 +26,7 @@ namespace ShmupProject
                 currentConfig.Position = config.Position + (config.InitialRadius * new Vector3(Mathf.Sin(angle), 0.0f, Mathf.Cos(angle)));
                 currentConfig.Rotation = (new Vector3(config.Rotation.x, angle * 180 / Mathf.PI, config.Rotation.z));
 
-                SubFire(currentConfig, currentConfig.Position, currentConfig.Rotation, bulletManager);
+                SubFire(currentConfig, currentConfig.Position, currentConfig.Rotation);
             }
         }
     }

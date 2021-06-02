@@ -30,7 +30,7 @@ namespace ShmupProject
             _bulletSpeed = bulletSpeed;
             _bulletAngularSpeed = bulletAngularSpeed;
             _lifeTime = lifetime != 0 ? Math.Abs(lifetime) : 5.0f;
-            _fireDelay = fireDelay;
+            _fireDelay = Math.Abs(fireDelay);
             _bulletCount = lineBulletCount > 0 ? lineBulletCount : 1;
             _deltaSpeed = deltaSpeed;
             _lineCount = lineCount > 0 ? lineCount : 1;
@@ -43,31 +43,74 @@ namespace ShmupProject
 
         public float BulletSpeed
         {
-            get { return _bulletSpeed; }
-            set { _bulletSpeed = value; }
+            get => _bulletSpeed; 
+            set => _bulletSpeed = value; 
         }
-        public float BulletAngularSpeed => _bulletAngularSpeed * (float)Math.PI / 180;
-        public float LifeTime => _lifeTime;
-        public float FireDelay => _fireDelay;
-        public int BulletCount => _bulletCount;
-        public float DeltaSpeed => _deltaSpeed;
-        public int LineCount => _lineCount;
-        public float ArcAngle => _arcAngle * (float)Math.PI / 180;
-        public float InitialRadius => _initialRadius;
+
+        public float BulletAngularSpeed
+        {
+            get => _bulletAngularSpeed * (float)Math.PI / 180; 
+            set => _bulletAngularSpeed = value; 
+        }
+
+        public float LifeTime
+        {
+            get => _lifeTime; 
+            set => _lifeTime = value; 
+        }
+
+        public float FireDelay
+        {
+            get => _fireDelay; 
+            set => _fireDelay = Math.Abs(value); 
+        }
+
+        public int BulletCount
+        {
+            get => _bulletCount; 
+            set => _bulletCount = value > 0 ? value : 1; 
+        }
+
+        public float DeltaSpeed
+        {
+            get => _deltaSpeed;
+            set => _deltaSpeed = value;
+        }
+
+        public int LineCount
+        { 
+            get => _lineCount;
+            set => _lineCount = value > 0 ? value : 1;
+        }
+
+        public float ArcAngle
+        {
+            get => _arcAngle * (float)Math.PI / 180;
+            set => _arcAngle = value;
+        }
+
+        public float InitialRadius
+        {
+            get => _initialRadius;
+            set => _initialRadius = value;
+        }
+
         public Vector3 Position
         {
-            get { return _position; }
-            set { _position = value; }
+            get => _position; 
+            set => _position = value; 
         }
+
         public Vector3 Rotation
         {
-            get { return _rotation /* (float)Math.PI / 180*/; }
-            set { _rotation = value; }
+            get => _rotation; 
+            set => _rotation = value; 
         }
+
         public float Angle
         {
-            get { return _angle; }
-            set { _angle = value; }
+            get => _angle; 
+            set => _angle = value; 
         }
     }
 }

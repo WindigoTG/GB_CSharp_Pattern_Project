@@ -8,7 +8,7 @@ namespace ShmupProject
 
         public void TakeHit()
         {
-            Debug.LogWarning("Got hit");
+            Debug.LogWarning($"Got hit at {Time.time}");
         }
     }
 }
