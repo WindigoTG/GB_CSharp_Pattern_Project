@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ShmupProject
 {
-    public interface IMovementPLayer
+    public interface IMovementPlayer
     {
         void Move(float inputHor, float inputVer, float deltaTime);
         void SetDependencies(Transform playerShip, PlayerData playerData);

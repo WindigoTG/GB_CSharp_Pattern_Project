@@ -19,8 +19,6 @@ namespace ShmupProject
             _playerFactory = playerFactory;
             _player = _playerFactory.CreatePlayer();
 
-            _player.Collider.GetHit += _player.Health.TakeHit;
-
             _shootingCD = _shootingCDtime;
         }
 
