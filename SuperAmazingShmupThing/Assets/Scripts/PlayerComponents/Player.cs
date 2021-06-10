@@ -22,7 +22,8 @@ namespace ShmupProject
             _collider = _transform.GetComponentInChildren<PlayerCollider>();
 
             _movement.SetDependencies(_transform, _playerData);
-            _collider.GetHit += _playerHealth.TakeHit;
+            //_collider.GetHit += _playerHealth.TakeHit;
+            ServiceLocator.GetService<CollisionManager>().PlayerHit += _playerHealth.TakeHit;
         }
 
         public Transform Transform => _transform;
