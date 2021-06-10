@@ -9,7 +9,6 @@ namespace ShmupProject
         private IMovementPlayer _movement;
         private IWeaponPlayer _weapon;
         private PlayerHealth _playerHealth;
-        private PlayerCollider _collider;
 
         public Player(PlayerData playerData, IMovementPlayer movement, IWeaponPlayer weapon)
         {
@@ -19,10 +18,8 @@ namespace ShmupProject
 
             _playerHealth = new PlayerHealth();
             _transform = GameObject.Instantiate(_playerData.Prefab, _playerData.Position, Quaternion.identity).transform;
-            _collider = _transform.GetComponentInChildren<PlayerCollider>();
 
             _movement.SetDependencies(_transform, _playerData);
-            //_collider.GetHit += _playerHealth.TakeHit;
             ServiceLocator.GetService<CollisionManager>().PlayerHit += _playerHealth.TakeHit;
         }
 
@@ -30,7 +27,6 @@ namespace ShmupProject
         public IWeaponPlayer Weapon => _weapon;
         public IMovementPlayer Movement => _movement;
         public PlayerHealth Health => _playerHealth;
-        public PlayerCollider Collider => _collider;
 
         public void SetMovement(IMovementPlayer movement)
         {

@@ -16,9 +16,9 @@ namespace ShmupProject
 
             _thisPart = Object.Instantiate(Resources.Load<GameObject>(partPath)).transform;
 
-            _weapons.Add(new TenLinesSpinningEnemy());
+            _weapons.Add(ServiceLocator.GetService<WeaponFactory>().CreateWeapon(EnemyWeaponType.TenLinesSpinning, false));
 
-            _weaponMounts.Add(_thisPart.Find("WeaponMount").transform);
+            _weaponMounts.Add(_thisPart.GetComponentInChildren<Grid>().transform);
 
             _maxHitPoints = 5;
             _hitPoints = _maxHitPoints;
@@ -32,8 +32,8 @@ namespace ShmupProject
             _thisPart.GetComponentInChildren<Rigidbody>().AddTorque(Vector3.up * torqueForce * _thisPart.localScale.x);
             if (!isRight)
                 foreach (IWeaponEnemy weapon in _weapons)
-                    if(weapon is TenLinesSpinningEnemy)
-                        (weapon as TenLinesSpinningEnemy).InvertSpin();
+                    if(weapon is EnemyWeapon)
+                        (weapon as EnemyWeapon).InvertAngularSpeed();
 
         }
     }

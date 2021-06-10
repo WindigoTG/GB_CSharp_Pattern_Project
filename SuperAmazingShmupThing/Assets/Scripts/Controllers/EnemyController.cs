@@ -12,14 +12,10 @@ namespace ShmupProject
         private float _tgtX;
         private float _tgtZ;
 
-        private float _boundX = 6;
-        private float _boundZ = 10;
-
         private float _deltaTime;
 
+        private EnemyFactory _enemyFactory;
         private Transform _targetPlayer;
-        private EnemyPool _enemyPool;
-
 
         #region Spawn Management Logic PlaceHolder
         private bool _isSpawnTime = true;
@@ -31,7 +27,7 @@ namespace ShmupProject
         private int _waveCompleted = 0;
         #endregion
 
-        public EnemyController(Transform targetPlayer, EnemyPool enemyPool)
+        public EnemyController(Transform targetPlayer, EnemyFactory enemyFactory)
         {
             _currentSpawnCD = _defaultSpawnCD;
             _enemies = new List<Enemy>();
@@ -39,7 +35,7 @@ namespace ShmupProject
             _enemiesToDefeat = _enemiesToSpawnInWave;
             GenerateNextWaveParameters();
             _targetPlayer = targetPlayer;
-            _enemyPool = enemyPool;
+            _enemyFactory = enemyFactory;
         }
 
         public void UpdateRegular(float deltaTime)
@@ -51,17 +47,9 @@ namespace ShmupProject
 
             for (int i = 0; i < _enemies.Count; i++)
             {
-                if (_enemies[i].gameObject.activeSelf)
+                if (_enemies[i].IsActive)
                 {
                     _enemies[i].UpdateRegular(_deltaTime);
-                    if (_enemies[i].transform.position.z < -_boundZ || _enemies[i].transform.position.z > _boundZ || 
-                        _enemies[i].transform.position.x < -_boundX || _enemies[i].transform.position.x > _boundX)
-                    {
-                        _enemyPool.Push(_enemies[i]);
-
-                        _enemies[i].GotHit -= DeactivateEnemy;
-                        CountEnemiewsDown();
-                    }
                 }
             }
         }
@@ -89,13 +77,20 @@ namespace ShmupProject
             {
                 if (_enemiesToSpawnInWave > 0)
                 {
-                    var enemy = _enemyPool.Pop();
-                    enemy.transform.position = new Vector3(_posX, 1, 10);
-                    enemy.transform.rotation = Quaternion.Euler(0, 180, 0);
+                    Enemy enemy = null; ;
+                    if (_enemies.Count > 0)
+                    {
+                        enemy = _enemies.Find(x => !x.IsActive);
+                    }
+                    if (enemy is null)
+                    {
+                        enemy = _enemyFactory.CreateEnemy();
+                    }
+                    enemy.ActivateEnemy(new Vector3(_posX, 0, 10), Quaternion.Euler(0, 180, 0));
                     enemy.SetMovementMethod(_movement, _tgtX, _tgtZ);
                     _currentSpawnCD = _defaultSpawnCD;
                     enemy.ShootingTarget = _targetPlayer;
-                    enemy.GotHit += DeactivateEnemy;
+                    enemy.Deactivation += DeactivateEnemy;
                     if (!_enemies.Contains(enemy))
                         _enemies.Add(enemy);
 
@@ -112,8 +107,7 @@ namespace ShmupProject
             {
                 CountEnemiewsDown();
                 var temp = _enemies.Find(x => x == enemy);
-                temp.GotHit -= DeactivateEnemy;
-                _enemyPool.Push(temp);
+                temp.Deactivation -= DeactivateEnemy;
             }
             
         }

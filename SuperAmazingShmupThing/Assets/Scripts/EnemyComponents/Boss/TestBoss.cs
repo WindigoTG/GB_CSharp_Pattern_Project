@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ShmupProject
@@ -13,10 +11,12 @@ namespace ShmupProject
 
         private void Awake()
         {
+            ServiceLocator.AddService(new WeaponFactory());
+
             ServiceLocator.AddService(new CollisionManager());
             _bulletManager = new BulletManager();
 
-            ServiceLocator.AddService(new BulletPoolManager());
+            ServiceLocator.AddService(new ObjectPoolManager());
             ServiceLocator.AddService(_bulletManager);
 
             _playerController = new PlayerController(new PlayerFactoryNonPhysical());

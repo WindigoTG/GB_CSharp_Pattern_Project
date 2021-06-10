@@ -15,25 +15,14 @@ public class BossSpreadgunWing : BossPart
 
             _thisPart = Object.Instantiate(Resources.Load<GameObject>(partPath)).transform;
 
-            _weapons.Add(new ThreeLinesSpreadgunEnemy());
+            _weapons.Add(ServiceLocator.GetService<WeaponFactory>().CreateWeapon(EnemyWeaponType.ThreeLinesSpreadgun, true));
 
-            _weaponMounts.Add(_thisPart.Find("WeaponMount").transform);
+            _weaponMounts.Add(_thisPart.GetComponentInChildren<Grid>().transform);
 
             _maxHitPoints = 5;
             _hitPoints = _maxHitPoints;
 
             GetThisPartMaterial();
-        }
-
-        public override void Fire(Transform player)
-        {
-            foreach (Transform wm in _weaponMounts)
-            {
-                Quaternion rotation = new Quaternion();
-                rotation.SetLookRotation(player.position - wm.position, Vector3.up);
-                wm.rotation = rotation;
-            }
-            base.Fire(player);
         }
     }
 }

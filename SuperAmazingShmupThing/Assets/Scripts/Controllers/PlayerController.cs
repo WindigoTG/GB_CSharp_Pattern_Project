@@ -24,14 +24,14 @@ namespace ShmupProject
 
         public void UpdateRegular(float deltaTime)
         {
-            inputHor = Input.GetAxis(MagicStrings.Input_Axis_Horizontal);
-            inputVer = Input.GetAxis(MagicStrings.Input_Axis_Vertical);
+            inputHor = Input.GetAxis(Constants.Input_Axis_Horizontal);
+            inputVer = Input.GetAxis(Constants.Input_Axis_Vertical);
             _player.Movement.Move(inputHor, inputVer, deltaTime);
 
             if (_shootingCD > 0)
                 _shootingCD -= deltaTime;
 
-            if (Input.GetAxis(MagicStrings.Input_Axis_Fire) != 0 && _shootingCD <= 0)
+            if (Input.GetAxis(Constants.Input_Axis_Fire) != 0 && _shootingCD <= 0)
             {
                 _player.Weapon.Shoot(_player.Transform);
                 _shootingCD = _shootingCDtime;

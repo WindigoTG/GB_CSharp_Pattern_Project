@@ -18,7 +18,7 @@ namespace ShmupProject
             ServiceLocator.AddService(new CollisionManager());
             _bulletManager = new BulletManager();
 
-            ServiceLocator.AddService(new BulletPoolManager());
+            ServiceLocator.AddService(new ObjectPoolManager());
             ServiceLocator.AddService(_bulletManager);
 
             //Arc arc = new Arc();

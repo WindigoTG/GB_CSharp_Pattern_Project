@@ -40,7 +40,7 @@ namespace ShmupProject
         public virtual void Fire(Transform player)
         {
             for (int i = 0; i < Mathf.Min(_weapons.Count, _weaponMounts.Count); i++)
-                _weapons[i].Shoot(_weaponMounts[i]);
+                _weapons[i].Shoot(_weaponMounts[i], player.position);
             if (_leftPart != null) _leftPart.Fire(player);
             if (_rightPart != null) _rightPart.Fire(player);
         }

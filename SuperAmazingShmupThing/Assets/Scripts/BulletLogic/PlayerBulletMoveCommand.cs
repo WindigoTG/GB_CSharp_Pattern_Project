@@ -29,17 +29,17 @@ namespace ShmupProject
                 _lifeTime -= deltaTime;
                 if (_lifeTime <= 0)
                 {
-                    ServiceLocator.GetService<BulletPoolManager>().PlayerBulletsPool.Push(_bullet.gameObject);
+                    ServiceLocator.GetService<ObjectPoolManager>().PlayerBulletsPool.Push(_bullet.gameObject);
                     ServiceLocator.GetService<BulletManager>().RemoveCommand(this);
                 }
 
                 _bullet.Translate(Vector3.forward * _speed * deltaTime, Space.Self);
 
                 if (ServiceLocator.GetService<CollisionManager>().CheckCollisions(
-                    _lastPosition, _bulletRadius, _bullet.position - _lastPosition, LayerMask.GetMask(MagicStrings.EnemyLayer)))
+                    _lastPosition, _bulletRadius, _bullet.position - _lastPosition, LayerMask.GetMask(Constants.EnemyLayer)))
                 {
                     ServiceLocator.GetService<BulletManager>().RemoveCommand(this);
-                    ServiceLocator.GetService<BulletPoolManager>().PlayerBulletsPool.Push(_bullet.gameObject);
+                    ServiceLocator.GetService<ObjectPoolManager>().PlayerBulletsPool.Push(_bullet.gameObject);
                 }
             }
             else
