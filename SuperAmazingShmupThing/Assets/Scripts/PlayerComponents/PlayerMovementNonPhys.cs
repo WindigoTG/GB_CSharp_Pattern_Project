@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ShmupProject
 {
-    public class PlayerMovementNonPhys : IMovementPLayer
+    public class PlayerMovementNonPhys : IMovementPlayer
     {
         Transform _playerShip;
         PlayerData _playerData;

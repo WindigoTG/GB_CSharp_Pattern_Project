@@ -10,9 +10,6 @@ namespace ShmupProject
         private Transform _weaponMount;
         private Transform _targetPlayer;
 
-        private float _shootingCDtime = 2.0f;
-        private float _shootingCD;
-
        public Transform ShootingTarget
         {
             set { _targetPlayer = value; }
@@ -20,6 +17,7 @@ namespace ShmupProject
 
         public void SetMovementMethod(MovementFunction movement, float tgtX = 0, float tgtZ = -6)
         {
+            ServiceLocator.GetService<CollisionManager>().EnemyHit += CheckHit;
             switch (movement)
             {
                 case MovementFunction.Linear:
@@ -47,7 +45,6 @@ namespace ShmupProject
 
         void Awake()
         {
-            _shootingCD = _shootingCDtime;
             _weaponMount = new GameObject("WeaponMount").transform;
             _weaponMount.transform.parent = transform;
             _weaponMount.position = transform.position;
@@ -61,21 +58,14 @@ namespace ShmupProject
         public void UpdateRegular(float deltaTime)
         {
             if (_movement != null)
-            _movement.Move(deltaTime);
+                _movement.Move(deltaTime);
             TrackPlayer();
-            Shoot(deltaTime);
+            Shoot();
         }
 
-        private void Shoot(float deltaTime)
+        private void Shoot()
         {
-            if (_shootingCD > 0)
-                _shootingCD -= deltaTime;
-            else
-            {
-                if (_weapon != null)
-                    _weapon.Shoot(_weaponMount);
-                _shootingCD = _shootingCDtime;
-            }
+             _weapon.Shoot(_weaponMount);
         }
 
         private void TrackPlayer()
@@ -87,10 +77,22 @@ namespace ShmupProject
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag(MagicStrings.Player_Bullet_Tag))
+            //if (other.CompareTag(MagicStrings.Player_Bullet_Tag))
+            //{
+            //    ServiceLocator.GetService<BulletPoolManager>().PlayerBulletsPool.Push(other.gameObject);
+            //    GotHit?.Invoke(this);
+            //}
+        }
+
+        private void CheckHit(Transform hit)
+        {
+            Transform[] parts = GetComponentsInChildren<Transform>();
+            foreach (Transform t in parts)
+            if (t == hit)
             {
-                ObjectPoolManager.GetInstance().PlayerBulletsPool.Push(other.gameObject);
                 GotHit?.Invoke(this);
+                ServiceLocator.GetService<CollisionManager>().EnemyHit -= CheckHit;
+                    return;
             }
         }
 
