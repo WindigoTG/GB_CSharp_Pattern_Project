@@ -18,5 +18,8 @@ namespace ShmupProject
         public const string Enemies_Parent_Object = "Enemies";
         public const string Enemy_Bullets_Parent_Object = "EnemyBullets";
         public const string Player_Bullets_Parent_Object = "PlayerBullets";
+
+        public const string PlayerLayer = "Player";
+        public const string EnemyLayer = "Enemy";
     }
 }

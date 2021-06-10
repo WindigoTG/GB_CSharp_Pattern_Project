@@ -11,30 +11,35 @@ namespace ShmupProject
         private IFireable _projectile;
         private float _fireDelay;
 
-        // Start is called before the first frame update
-        void Start()
+        private float _lastFiredTime;
+
+        private void Awake()
         {
+            ServiceLocator.AddService(new CollisionManager());
             _bulletManager = new BulletManager();
 
-            ServiceLocator.AddService<BulletPoolManager>(new BulletPoolManager());
+            ServiceLocator.AddService(new BulletPoolManager());
+            ServiceLocator.AddService(_bulletManager);
 
             //Arc arc = new Arc();
             //Line line = new Line();
             //SingleBullet bullet = new SingleBullet();
             //_projectile = arc.Of(line).Of(bullet);
-            _projectile = new SingleBullet().FiredInLine().FiredInArc();
+            _projectile = new SingleBullet(BulletOwner.Enemy).FiredInLine().FiredInArc();
+            //_projectile = new SingleBullet().FiredInArc().FiredInLine().FiredInArc().FiredInLine().FiredInArc();
+            //_projectile = new SingleBullet().FiredInArc().FiredInArc().FiredInArc().FiredInArc().FiredInLine();
+            //_projectile = new SingleBullet(BulletOwner.Enemy);
 
             _fireDelay = _config.FireDelay;
+            _lastFiredTime = Time.time;
         }
 
-        // Update is called once per frame
         void Update()
         {
-            if (_fireDelay > 0)
-                _fireDelay -= Time.deltaTime;
-            else
+            if (Time.time - _lastFiredTime >= _fireDelay)
             {
                 Fire();
+                _lastFiredTime = Time.time;
                 _fireDelay = _config.FireDelay;
             }
         }
@@ -46,7 +51,7 @@ namespace ShmupProject
 
         private void Fire()
         {
-            _projectile.Fire(_config, transform.position, transform.rotation.eulerAngles, _bulletManager);
+            _projectile.Fire(_config, transform.position, transform.rotation.eulerAngles);
         }
     }
 }

@@ -4,8 +4,6 @@ namespace ShmupProject
 {
     internal sealed class BulletPoolManager
     {
-        private static BulletPoolManager _poolManager;
-
         private ObjectPool _playerBulletsPool;
         private ObjectPool _enemyBulletsPool;
 

@@ -25,7 +25,7 @@ namespace ShmupProject
         private bool _isSpawnTime = true;
         private float _defaultSpawnCD = 0.5f;
         private float _currentSpawnCD;
-        private int _numberOfEnemies = 3;
+        private int _numberOfEnemies = 1;
         private int _enemiesToSpawnInWave;
         private int _enemiesToDefeat;
         private int _waveCompleted = 0;
