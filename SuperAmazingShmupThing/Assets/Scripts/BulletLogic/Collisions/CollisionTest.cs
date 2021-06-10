@@ -9,7 +9,7 @@ namespace ShmupProject
         // Start is called before the first frame update
         void Start()
         {
-            gameObject.layer = LayerMask.NameToLayer(MagicStrings.PlayerLayer);
+            gameObject.layer = LayerMask.NameToLayer(Constants.PlayerLayer);
             ServiceLocator.GetService<CollisionManager>().PlayerHit += GotHit;
         }
 

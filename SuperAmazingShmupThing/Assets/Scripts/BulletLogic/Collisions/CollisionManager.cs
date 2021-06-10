@@ -10,24 +10,28 @@ namespace ShmupProject
 
         public bool CheckCollisions(Vector3 origin, float radius, Vector3 direction, int layerMask)
         {
-            RaycastHit hit;
+            RaycastHit[] hits = new RaycastHit[128];
             float maxDistance = direction.magnitude;
 
-            if (Physics.SphereCast(origin, radius, direction, out hit, maxDistance, layerMask, QueryTriggerInteraction.Collide))
+            if (Physics.SphereCastNonAlloc(origin, radius, direction.normalized, hits, maxDistance, layerMask, QueryTriggerInteraction.Collide) > 0)
             {
-                NotifyObservers(hit, layerMask);
-                return true;
+                foreach (var h in hits)
+                    if (h.collider != null)
+                    {
+                        NotifyObservers(h, layerMask);
+                        return true;
+                    }
             }
                 return false;
         }
 
         void NotifyObservers(RaycastHit hit, int layerMask)
         {
-            if (layerMask == LayerMask.GetMask(MagicStrings.PlayerLayer))
+            if (layerMask == LayerMask.GetMask(Constants.PlayerLayer))
             {
                 PlayerHit?.Invoke();
             }
-            if (layerMask == LayerMask.GetMask(MagicStrings.EnemyLayer))
+            if (layerMask == LayerMask.GetMask(Constants.EnemyLayer))
             {
                 EnemyHit?.Invoke(hit.collider.transform);
             }

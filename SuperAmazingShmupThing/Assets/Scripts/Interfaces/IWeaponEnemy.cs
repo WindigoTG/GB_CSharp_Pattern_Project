@@ -4,6 +4,6 @@ namespace ShmupProject
 {
     public interface IWeaponEnemy
     {
-        void Shoot(Transform bulletSpawn);
+        void Shoot(Transform bulletSpawn, Vector3 targetPosition);
     }
 }

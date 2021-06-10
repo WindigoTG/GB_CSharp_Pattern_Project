@@ -10,6 +10,7 @@ namespace ShmupProject
         private PlayerController _playerController;
         private EnemyController _enemyController;
         private BulletManager _bulletManager;
+        private ScoreTracker _scoreTracker;
 
         private void Awake()
         {
@@ -18,17 +19,21 @@ namespace ShmupProject
 
             ServiceLocator.AddService(new CollisionManager());
 
+            _scoreTracker = new ScoreTracker();
+            ServiceLocator.AddService(_scoreTracker);
+            _updatables.Add(_scoreTracker);
+
             _bulletManager = new BulletManager();
             ServiceLocator.AddService(_bulletManager);
             _lateUpdatables.Add(_bulletManager);
 
-            ServiceLocator.AddService(new BulletPoolManager());
+            ServiceLocator.AddService(new ObjectPoolManager());
             
             _playerController = new PlayerController(new PlayerFactoryNonPhysical());
             _updatables.Add(_playerController);
 
-            _enemyController = new EnemyController(_playerController.Player, 
-                                                    new EnemyPool(new EnemyFactory(new SingleShotStraightEnemy())));
+            ServiceLocator.AddService(new WeaponFactory());
+            _enemyController = new EnemyController(_playerController.Player, new EnemyFactory());
             _updatables.Add(_enemyController);
         }
 

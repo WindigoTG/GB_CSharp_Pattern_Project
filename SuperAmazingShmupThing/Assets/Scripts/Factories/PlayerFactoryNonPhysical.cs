@@ -18,12 +18,12 @@ namespace ShmupProject
 
         public Player CreatePlayer()
         {
-            return new Player(Resources.Load<PlayerData>(MagicStrings.Player_Data), new PlayerMovementNonPhys(), _weapon);
+            return new Player(Resources.Load<PlayerData>(Constants.Player_Data), new PlayerMovementNonPhys(), _weapon);
         }
 
         public Player CreatePlayerPhysicalMovement()
         {
-            return new Player(Resources.Load<PlayerData>(MagicStrings.Player_Data), new PlayerMovementPhysics(), _weapon);
+            return new Player(Resources.Load<PlayerData>(Constants.Player_Data), new PlayerMovementPhysics(), _weapon);
         }
     }
 }

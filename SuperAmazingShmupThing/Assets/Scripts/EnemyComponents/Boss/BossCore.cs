@@ -17,11 +17,19 @@ namespace ShmupProject
             _thisPart.position = parent.position;
             _thisPart.parent = parent;
 
-            _weapons.Add(new LineStraightEnemy());
-            _weapons.Add(new LineStraightEnemy());
+            foreach (var wm in _thisPart.GetComponentsInChildren<Grid>())
+                _weaponMounts.Add(wm.transform);
 
-            _weaponMounts.Add(_thisPart.Find("WeaponMount1").transform);
-            _weaponMounts.Add(_thisPart.Find("WeaponMount2").transform);
+            foreach (var wm in _weaponMounts)
+            {
+                IWeaponEnemy weapon = ServiceLocator.GetService<WeaponFactory>().CreateWeapon(EnemyWeaponType.LineStraight, true);
+                LeadTargeting targeting = new LeadTargeting();
+                targeting.IsPredicting = true;
+                AdwancedTrackingWeaponProxy proxy = new AdwancedTrackingWeaponProxy(weapon, targeting);
+                _weapons.Add(proxy);
+
+                //_weapons.Add(ServiceLocator.GetService<WeaponFactory>().CreateWeapon(EnemyWeaponType.LineStraight, false));
+            }
 
             _maxHitPoints = 10;
             _hitPoints = _maxHitPoints;

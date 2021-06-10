@@ -1,18 +1,57 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace ShmupProject
 {
-    public sealed class Enemy : MonoBehaviour, IUpdateable
+    public sealed class Enemy : IUpdateable
     {
         private IMovementEnemy _movement;
         private IWeaponEnemy _weapon;
+        private Transform _enemy;
         private Transform _weaponMount;
         private Transform _targetPlayer;
 
-       public Transform ShootingTarget
+        private float _boundX = 6;
+        private float _boundZ = 10;
+
+        public Action<Enemy> Deactivation;
+
+        private ObjectPool _enemyPool;
+        private ScoreTracker _scoreTracker;
+
+        LeadTargeting _targeting;
+
+        private int _scoreValue = 100;
+
+        private GameObject _receiver;
+
+        public Enemy()
+        {
+            _enemyPool = ServiceLocator.GetService<ObjectPoolManager>().EnemyPool;
+            _scoreTracker = ServiceLocator.GetService<ScoreTracker>();
+            _receiver = UnityEngine.Object.FindObjectOfType<SCoreMessageReceiver>().gameObject; 
+        }
+
+        public Transform ShootingTarget
         {
             set { _targetPlayer = value; }
+        }
+
+        public bool IsActive => _enemy != null;
+
+        public void ActivateEnemy(Vector3 position, Quaternion rotation)
+        {
+            _enemy = _enemyPool.Pop().transform;
+            _weaponMount = _enemy.GetComponentInChildren<Grid>().transform;
+            _enemy.position = position;
+            _enemy.rotation = rotation;
+
+            int random = UnityEngine.Random.Range(0, 2);
+            if (random == 0)
+                _targeting.IsPredicting = false;
+            else
+                _targeting.IsPredicting = true;
         }
 
         public void SetMovementMethod(MovementFunction movement, float tgtX = 0, float tgtZ = -6)
@@ -22,80 +61,73 @@ namespace ShmupProject
             {
                 case MovementFunction.Linear:
                     {
-                        _movement = new EnemyMovementLinear(transform, tgtX, tgtZ);
+                        _movement = new EnemyMovementLinear(_enemy.transform, tgtX, tgtZ);
                         break;
                     }
                 case MovementFunction.Quadratic:
                     {
-                        _movement = new EnemyMovementQuadratic(transform, tgtX, tgtZ);
+                        _movement = new EnemyMovementQuadratic(_enemy.transform, tgtX, tgtZ);
                         break;
                     }
                 case MovementFunction.Cubic:
                     {
-                        _movement = new EnemyMovementCubic(transform, tgtX, tgtZ);
+                        _movement = new EnemyMovementCubic(_enemy.transform, tgtX, tgtZ);
                         break;
                     }
                 default:
                     {
-                        _movement = new EnemyMovementLinear(transform, tgtX, tgtZ);
+                        _movement = new EnemyMovementLinear(_enemy.transform, tgtX, tgtZ);
                         break;
                     }
             }
         }
 
-        void Awake()
-        {
-            _weaponMount = new GameObject("WeaponMount").transform;
-            _weaponMount.transform.parent = transform;
-            _weaponMount.position = transform.position;
-        }
-
         public void SetWeapon(IWeaponEnemy weapon)
         {
-            _weapon = weapon;
+            //_weapon = weapon;
+
+            _targeting = new LeadTargeting();
+            AdwancedTrackingWeaponProxy proxy = new AdwancedTrackingWeaponProxy(weapon, _targeting);
+            _weapon = proxy;
         }
 
         public void UpdateRegular(float deltaTime)
         {
-            if (_movement != null)
-                _movement.Move(deltaTime);
-            TrackPlayer();
+            _movement?.Move(deltaTime);
             Shoot();
+
+            if (_enemy.position.z < -_boundZ || _enemy.position.z > _boundZ ||
+                _enemy.position.x < -_boundX || _enemy.position.x > _boundX)
+                DeactivateEnemy();
         }
 
         private void Shoot()
         {
-             _weapon.Shoot(_weaponMount);
-        }
-
-        private void TrackPlayer()
-        {
-            Quaternion rotation = new Quaternion();
-            rotation.SetLookRotation(_targetPlayer.position - _weaponMount.position, Vector3.up);
-            _weaponMount.rotation = rotation;
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            //if (other.CompareTag(MagicStrings.Player_Bullet_Tag))
-            //{
-            //    ServiceLocator.GetService<BulletPoolManager>().PlayerBulletsPool.Push(other.gameObject);
-            //    GotHit?.Invoke(this);
-            //}
+             _weapon.Shoot(_weaponMount, _targetPlayer.position);
         }
 
         private void CheckHit(Transform hit)
         {
-            Transform[] parts = GetComponentsInChildren<Transform>();
+            Transform[] parts = _enemy.GetComponentsInChildren<Transform>();
             foreach (Transform t in parts)
-            if (t == hit)
-            {
-                GotHit?.Invoke(this);
-                ServiceLocator.GetService<CollisionManager>().EnemyHit -= CheckHit;
-                    return;
-            }
+                if (t == hit)
+                {
+                    ExecuteEvents.Execute<IScoreMessageReseiver>(_receiver, null, (x,y) => x.AddScore(_scoreValue));
+                    _scoreTracker.AddScore(_scoreValue);
+                    _enemy.position = new Vector3(_boundX, 0, _boundZ);
+                    
+                    DeactivateEnemy();
+                    break;
+                }
         }
 
-        public Action<Enemy> GotHit;
+        private void DeactivateEnemy()
+        {
+            ServiceLocator.GetService<CollisionManager>().EnemyHit -= CheckHit;
+            Deactivation?.Invoke(this);
+            _enemyPool.Push(_enemy.gameObject);
+            _enemy = null;
+            _weaponMount = null;
+        }
     }
 }

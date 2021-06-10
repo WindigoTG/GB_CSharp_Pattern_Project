@@ -31,7 +31,7 @@ namespace ShmupProject
                 _lifeTime -= deltaTime;
                 if (_lifeTime <= 0)
                 {
-                    ServiceLocator.GetService<BulletPoolManager>().EnemyBulletsPool.Push(_bullet.gameObject);
+                    ServiceLocator.GetService<ObjectPoolManager>().EnemyBulletsPool.Push(_bullet.gameObject);
                     ServiceLocator.GetService<BulletManager>().RemoveCommand(this);
                 }
 
@@ -40,10 +40,10 @@ namespace ShmupProject
                 _bullet.Translate(Vector3.forward * _speed * deltaTime, Space.Self);
 
                 if (ServiceLocator.GetService<CollisionManager>().CheckCollisions(
-                    _lastPosition, _bulletRadius, _bullet.position - _lastPosition, LayerMask.GetMask(MagicStrings.PlayerLayer)))
+                    _lastPosition, _bulletRadius, _bullet.position - _lastPosition, LayerMask.GetMask(Constants.PlayerLayer)))
                 {
                     ServiceLocator.GetService<BulletManager>().RemoveCommand(this);
-                    ServiceLocator.GetService<BulletPoolManager>().EnemyBulletsPool.Push(_bullet.gameObject);
+                    ServiceLocator.GetService<ObjectPoolManager>().EnemyBulletsPool.Push(_bullet.gameObject);
                 }
             }
             else

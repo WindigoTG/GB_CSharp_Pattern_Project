@@ -14,8 +14,8 @@ namespace ShmupProject
         public override void Fire(BullletConfig config, Vector3 position, Vector3 rotation)
         {
             Transform bullet = _owner == BulletOwner.Enemy ? 
-                                ServiceLocator.GetService<BulletPoolManager>().EnemyBulletsPool.Pop().transform :
-                                ServiceLocator.GetService<BulletPoolManager>().PlayerBulletsPool.Pop().transform;
+                                ServiceLocator.GetService<ObjectPoolManager>().EnemyBulletsPool.Pop().transform :
+                                ServiceLocator.GetService<ObjectPoolManager>().PlayerBulletsPool.Pop().transform;
 
             bullet.position = position;
             bullet.rotation = Quaternion.Euler(rotation);
