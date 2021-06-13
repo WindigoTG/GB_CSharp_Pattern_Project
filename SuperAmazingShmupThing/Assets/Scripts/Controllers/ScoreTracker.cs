@@ -8,7 +8,7 @@ namespace ShmupProject
     public class ScoreTracker : IUpdateable
     {
         private uint _score;
-        private int _scoreMultiplier;
+        private int _scoreMultiplier = 1;
 
         private TextMeshProUGUI _scoreText;
         private TextMeshProUGUI _multiplierText;
@@ -20,12 +20,15 @@ namespace ShmupProject
         private int _counterMaxWidth;
         private Image _multiplierCounter;
 
-        public ScoreTracker()
+        private EnemyController _enemyController;
+
+        public ScoreTracker(EnemyController enemyController)
         {
             _multiplierText = Object.FindObjectOfType<BillboardRenderer>().GetComponent<TextMeshProUGUI>();
             _scoreText = Object.FindObjectOfType<AimConstraint>().GetComponent<TextMeshProUGUI>();
             _multiplierCounterBar = Object.FindObjectOfType<SpriteMask>().GetComponent<RectTransform>();
             _multiplierCounter = _multiplierCounterBar.GetComponent<Image>();
+            _enemyController = enemyController;
 
             _counterMaxWidth = Screen.width - 20;
         }
@@ -43,7 +46,8 @@ namespace ShmupProject
 
         public void UpdateRegular(float deltaTime)
         {
-            _multiplierDuration = Mathf.Clamp(_multiplierDuration -= deltaTime, 0, _maxMultiplierDuration);
+            if (_enemyController.IsEnemyWaveInProgress)
+                _multiplierDuration = Mathf.Clamp(_multiplierDuration -= deltaTime, 0, _maxMultiplierDuration);
 
             if (_multiplierDuration == 0 && _scoreMultiplier > 1)
             {

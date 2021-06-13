@@ -8,7 +8,7 @@ namespace ShmupProject
         private float _coefficientB;
         private Transform _enemy;
         private bool _moveRight;
-        private float _arbitraryMagicSpeedModifier = 0.05f;
+        private float _speed = 5;
 
         public EnemyMovementLinear(Transform enemy, float tgtX, float tgtZ)
         {
@@ -18,7 +18,7 @@ namespace ShmupProject
 
         public void Move(float deltaTime)
         {
-            _enemy.Translate(CalculateMovement(deltaTime) * _arbitraryMagicSpeedModifier);
+            _enemy.Translate(CalculateMovement(deltaTime) * _speed * deltaTime);
         }
 
         private Vector3 CalculateMovement(float deltaTime)

@@ -12,8 +12,7 @@ namespace ShmupProject
         private Transform _weaponMount;
         private Transform _targetPlayer;
 
-        private float _boundX = 6;
-        private float _boundZ = 10;
+        private float _screenBoundOffset = 2.0f;
 
         public Action<Enemy> Deactivation;
 
@@ -24,13 +23,13 @@ namespace ShmupProject
 
         private int _scoreValue = 100;
 
-        private GameObject _receiver;
+        //private GameObject _receiver;
 
         public Enemy()
         {
             _enemyPool = ServiceLocator.GetService<ObjectPoolManager>().EnemyPool;
             _scoreTracker = ServiceLocator.GetService<ScoreTracker>();
-            _receiver = UnityEngine.Object.FindObjectOfType<SCoreMessageReceiver>().gameObject; 
+            //_receiver = UnityEngine.Object.FindObjectOfType<SCoreMessageReceiver>().gameObject; 
         }
 
         public Transform ShootingTarget
@@ -96,8 +95,8 @@ namespace ShmupProject
             _movement?.Move(deltaTime);
             Shoot();
 
-            if (_enemy.position.z < -_boundZ || _enemy.position.z > _boundZ ||
-                _enemy.position.x < -_boundX || _enemy.position.x > _boundX)
+            if (_enemy.position.z < -Constants.ScreenBoundZ - _screenBoundOffset || _enemy.position.z > Constants.ScreenBoundZ + _screenBoundOffset ||
+                _enemy.position.x < -Constants.ScreenBoundX - _screenBoundOffset || _enemy.position.x > Constants.ScreenBoundX + _screenBoundOffset)
                 DeactivateEnemy();
         }
 
@@ -112,9 +111,9 @@ namespace ShmupProject
             foreach (Transform t in parts)
                 if (t == hit)
                 {
-                    ExecuteEvents.Execute<IScoreMessageReseiver>(_receiver, null, (x,y) => x.AddScore(_scoreValue));
+                    //ExecuteEvents.Execute<IScoreMessageReseiver>(_receiver, null, (x,y) => x.AddScore(_scoreValue));
                     _scoreTracker.AddScore(_scoreValue);
-                    _enemy.position = new Vector3(_boundX, 0, _boundZ);
+                    _enemy.position = new Vector3(Constants.ScreenBoundX + 1, 0, Constants.ScreenBoundZ + 1);
                     
                     DeactivateEnemy();
                     break;
