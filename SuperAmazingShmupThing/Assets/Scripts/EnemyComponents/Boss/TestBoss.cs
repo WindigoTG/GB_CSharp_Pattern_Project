@@ -8,6 +8,7 @@ namespace ShmupProject
         BossPart _boss;
         BulletManager _bulletManager;
         PlayerController _playerController;
+        IBossMovement _bossMovement;
 
         private void Awake()
         {
@@ -29,18 +30,31 @@ namespace ShmupProject
 
             _boss.AddPart(new BossRotaryWeaponPart(), new BossRotaryWeaponPart());
             _boss.AddPart(new BossSpreadgunWing(), new BossSpreadgunWing());
-            //_boss.AddPart(new BossSpreadgunWing(), new BossSpreadgunWing());
+            _boss.AddPart(new BossRotaryWeaponPart(), new BossSpreadgunWing());
 
-            //_boss.AddPart(new BossSpreadgunWing(), new BossRotaryWeaponPart());
-            //_boss.AddPart(new BossRotaryWeaponPart(), new BossSpreadgunWing());
+            
 
-            transform.localScale *= 0.3f;
+            _boss.AddPart(new BossSpreadgunWing(), new BossSpreadgunWing());
+
+            _boss.AddPart(new BossSpreadgunWing(), new BossRotaryWeaponPart());
+            _boss.AddPart(new BossRotaryWeaponPart(), new BossSpreadgunWing());
+            _boss.AddPart(new BossSpreadgunWing(), new BossRotaryWeaponPart());
+            _boss.AddPart(new BossRotaryWeaponPart(), new BossSpreadgunWing());
+
             transform.Rotate(new Vector3(0, 180, 0));
+            Debug.Log($"Left {_boss.WidthLeft}  |  Right {_boss.WidthRight}");
+            transform.localScale *= 0.5f;
+            Debug.Log(transform.localScale.x);
+            Debug.Log($"Left {_boss.WidthLeft}  |  Right {_boss.WidthRight}");
+            Debug.Log($"Left {_boss.WidthLeft * transform.localScale.x}   |  Right {_boss.WidthRight * transform.localScale.x}");
 
-            ServiceLocator.GetService<CollisionManager>().EnemyHit += CheckIsBossWasHit;
+            _boss.RecalculateHitPoints();
+
+            ServiceLocator.GetService<CollisionManager>().EnemyHit += CheckIfBossWasHit;
+            _bossMovement = new BossMovementRandom(transform);
         }
 
-        private void CheckIsBossWasHit(Transform hit)
+        private void CheckIfBossWasHit(Transform hit)
         {
             _boss.CheckHit(hit);
         }
@@ -49,6 +63,9 @@ namespace ShmupProject
         void Update()
         {
             _boss.Fire(_playerController.Player);
+            _bossMovement.Move(_boss.WidthLeft * 2,
+                                _boss.WidthRight * 2,
+                                Time.deltaTime);
             _playerController.UpdateRegular(Time.deltaTime);
         }
 

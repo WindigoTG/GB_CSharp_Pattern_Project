@@ -5,7 +5,7 @@ namespace ShmupProject
     public class SCoreMessageReceiver : MonoBehaviour, IScoreMessageReseiver
     {
         private uint _score;
-        private int _scoreMultiplier;
+        private int _scoreMultiplier = 1;
 
         private float _maxMultiplierDuration = 1.5f;
         private float _multiplierDuration;

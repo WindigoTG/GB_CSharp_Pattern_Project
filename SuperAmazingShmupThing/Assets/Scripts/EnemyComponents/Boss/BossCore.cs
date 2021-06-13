@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace ShmupProject
 {
@@ -13,7 +14,7 @@ namespace ShmupProject
             _weaponMounts = new List<Transform>();
             _partsMaterial = new List<Material>();_partsMaterial = new List<Material>();
 
-            _thisPart = Object.Instantiate(Resources.Load<GameObject>(partPath)).transform;
+            _thisPart = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(partPath)).transform;
             _thisPart.position = parent.position;
             _thisPart.parent = parent;
 
@@ -22,21 +23,32 @@ namespace ShmupProject
 
             foreach (var wm in _weaponMounts)
             {
-                IWeaponEnemy weapon = ServiceLocator.GetService<WeaponFactory>().CreateWeapon(EnemyWeaponType.LineStraight, true);
-                LeadTargeting targeting = new LeadTargeting();
-                targeting.IsPredicting = true;
-                AdwancedTrackingWeaponProxy proxy = new AdwancedTrackingWeaponProxy(weapon, targeting);
-                _weapons.Add(proxy);
+                //IWeaponEnemy weapon = ServiceLocator.GetService<WeaponFactory>().CreateWeapon(EnemyWeaponType.LineStraight, true);
+                //LeadTargeting targeting = new LeadTargeting();
+                //targeting.IsPredicting = true;
+                //AdwancedTrackingWeaponProxy proxy = new AdwancedTrackingWeaponProxy(weapon, targeting);
+                //_weapons.Add(proxy);
 
-                //_weapons.Add(ServiceLocator.GetService<WeaponFactory>().CreateWeapon(EnemyWeaponType.LineStraight, false));
+                _weapons.Add(ServiceLocator.GetService<WeaponFactory>().CreateWeapon(EnemyWeaponType.LineStraight, false));
             }
 
             _maxHitPoints = 10;
             _hitPoints = _maxHitPoints;
 
             GetThisPartMaterial();
+
+            _scoreValue = 1000;
         }
 
         public override void SetPartPosition(Transform parent, bool isRight){}
+
+        public event Action Destroyed;
+
+        public override void CheckHit(Transform hit)
+        {
+            base.CheckHit(hit);
+            if (_hitPoints <= 0)
+                Destroyed?.Invoke();
+        }
     }
 }

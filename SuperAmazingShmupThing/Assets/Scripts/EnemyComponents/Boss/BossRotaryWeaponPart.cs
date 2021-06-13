@@ -24,6 +24,8 @@ namespace ShmupProject
             _hitPoints = _maxHitPoints;
 
             GetThisPartMaterial();
+
+            _scoreValue = 750;
         }
 
         public override void SetPartPosition(Transform parent, bool isRight)

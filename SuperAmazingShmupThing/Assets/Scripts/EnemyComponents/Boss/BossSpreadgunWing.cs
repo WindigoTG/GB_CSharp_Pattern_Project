@@ -23,6 +23,8 @@ public class BossSpreadgunWing : BossPart
             _hitPoints = _maxHitPoints;
 
             GetThisPartMaterial();
+
+            _scoreValue = 500;
         }
     }
 }

@@ -19,10 +19,6 @@ namespace ShmupProject
 
             ServiceLocator.AddService(new CollisionManager());
 
-            _scoreTracker = new ScoreTracker();
-            ServiceLocator.AddService(_scoreTracker);
-            _updatables.Add(_scoreTracker);
-
             _bulletManager = new BulletManager();
             ServiceLocator.AddService(_bulletManager);
             _lateUpdatables.Add(_bulletManager);
@@ -33,8 +29,12 @@ namespace ShmupProject
             _updatables.Add(_playerController);
 
             ServiceLocator.AddService(new WeaponFactory());
-            _enemyController = new EnemyController(_playerController.Player, new EnemyFactory());
+            _enemyController = new EnemyController(_playerController.Player, new EnemyFactory(), new BossFactory());
             _updatables.Add(_enemyController);
+
+            _scoreTracker = new ScoreTracker(_enemyController);
+            ServiceLocator.AddService(_scoreTracker);
+            _updatables.Add(_scoreTracker);
         }
 
         void Update()

@@ -21,5 +21,8 @@ namespace ShmupProject
 
         public const string PlayerLayer = "Player";
         public const string EnemyLayer = "Enemy";
+
+        public const float ScreenBoundX = 5.0f;
+        public const float ScreenBoundZ = 8.5f;
     }
 }

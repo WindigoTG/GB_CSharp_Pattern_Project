@@ -9,5 +9,7 @@ namespace ShmupProject
         public override void Fire(Transform player) { }
         public override void CheckHit(Transform hit) { }
         protected override void GetThisPartMaterial() { }
+        public override void Destroy() { }
+        public override void RecalculateHitPoints() { }
     }
 }

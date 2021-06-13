@@ -10,7 +10,7 @@ namespace ShmupProject
         private float _tgtZ;
         private Transform _enemy;
         private bool _moveRight;
-        private float _arbitraryMagicSpeedModifier = 0.05f;
+        private float _speed = 5;
         private float _minXpos = 2;
         private float _maxXpos = 4;
 
@@ -22,7 +22,7 @@ namespace ShmupProject
 
         public void Move(float deltaTime)
         {
-            _enemy.Translate(CalculateMovement(deltaTime) * _arbitraryMagicSpeedModifier);
+            _enemy.Translate(CalculateMovement(deltaTime) * _speed * deltaTime);
         }
 
         private Vector3 CalculateMovement(float deltaTime)
